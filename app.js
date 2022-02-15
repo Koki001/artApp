@@ -34,6 +34,10 @@ artApp.getArt = function(usersChosenAnimal) {
 
 // create a method which will take the API data and display it on our page
 artApp.displayArt = function(artArray) {
+
+    const ulElement = document.querySelector("#artwork")
+    ulElement.innerHTML = ""
+
     artArray.forEach(function(individualArtObject) {
 
         // extract the data from the API (artist name, title, img url, alt text)
@@ -64,15 +68,36 @@ artApp.displayArt = function(artArray) {
         
         listElement.append(heading, image, paragraphElement)
 
-        const ulElement = document.querySelector("#artwork")
+        
         ulElement.appendChild(listElement)
 
+    })
+}
+// create a method which will update the heading of the page
+artApp.updateAnimalHeading = function(something) {
+    document.querySelector("#page-title span").textContent = `${something}s!!`
+}
+
+// create a method which sets up all of the event listeners within this app
+artApp.eventListenerSetUp = function() {
+    // 1st event listener: on the select element (when user selects a different option, take the chosen animal and get the art related to that animal)
+    const selectElement = document.querySelector("#animalChoices")
+    // when the user selects a different option, get art related to the new choice
+    selectElement.addEventListener("change", function() {
+        artApp.getArt(this.value)
+
+        const selectedAnimal = this.value.charAt(0).toUpperCase() + this.value.slice(1)
+        artApp.getArt(selectedAnimal)
+        artApp.updateAnimalHeading(selectedAnimal)
     })
 }
 
 // create init method to start our APP
 artApp.init = function() {
     console.log("App is initialized")
+
+    artApp.eventListenerSetUp()
+
     artApp.getArt("bear")
 }
 artApp.init()
